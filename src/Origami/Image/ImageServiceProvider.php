@@ -18,7 +18,7 @@ class ImageServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('origami/image');
+        $this->package('origami/image', 'origami/image');
 	}
 
 	/**
@@ -27,9 +27,39 @@ class ImageServiceProvider extends ServiceProvider {
 	 * @return void
 	 */
 	public function register()
-	{
-		//
+    {
+        $this->app['config']->package('origami/image', __DIR__.'/../../config', 'origami/image');
+
+        $this->overwriteConfig();
+
+		$this->app->register('Intervention\Image\ImageServiceProvider');
+        $this->app->alias('Image', 'Intervention\Image\Facades\Image');
 	}
+
+    protected function overwriteConfig()
+    {
+        $this->app['config']->package('intervention/imagecache', __DIR__.'/../../../vendor/intervention/imagecache/src/config', 'imagecache');
+
+        $match = [
+            'route' => 'sizes_route',
+            'paths' => 'paths',
+            'lifetime' => 'cache'
+        ];
+
+        foreach ( $match as $key => $origami ) {
+            $this->app['config']->set('imagecache::'.$key, $this->app['config']->get('origami/image::'.$origami));
+        }
+
+        $templates = [];
+
+        foreach ( $this->app['config']->get('origami/image::sizes') as $size => $dimensions ) {
+            $templates[$size] = function($image) use($dimensions) {
+                return $image->fit($dimensions[0],$dimensions[1]);
+            };
+        }
+
+        $this->app['config']->set('imagecache::templates', $templates);
+    }
 
 	/**
 	 * Get the services provided by the provider.

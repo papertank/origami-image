@@ -92,7 +92,7 @@ class Image {
             if ( is_callable($callback) ) {
 
                 $callback($this->manipulate())
-                        ->save($path);
+                        ->save($path, 100);
 
             } else {
                 File::copy($this->path, $path);

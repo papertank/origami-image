@@ -43,6 +43,11 @@ class Image {
         return pathinfo($this->path, PATHINFO_BASENAME);
     }
 
+    public function getFileExtension()
+    {
+        return pathinfo($this->path, PATHINFO_EXTENSION);
+    }
+
     public function getFolder()
     {
         return substr(pathinfo($this->path, PATHINFO_DIRNAME),strlen(public_path())+1);
@@ -51,6 +56,30 @@ class Image {
     public function getDirname()
     {
         return pathinfo($this->path, PATHINFO_DIRNAME);
+    }
+
+    public function getWidth()
+    {
+        return $this->manipulate()->width();
+    }
+
+    public function getHeight()
+    {
+        return $this->manipulate()->height();
+    }
+
+    public function getFilesize()
+    {
+        return File::size($this->path);
+    }
+
+    public function getMime()
+    {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_file($finfo, $this->path);
+        finfo_close($finfo);
+
+        return $mime;
     }
 
     public function getSizesPath($size)

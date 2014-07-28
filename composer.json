@@ -1,9 +1,11 @@
 {
     "name": "origami/image",
-    "description": "",
+    "description": "Laravel image manipulation helper package.",
+    "keywords": ["image", "laravel"],
+    "license": "MIT",
     "authors": [
         {
-            "name": "Papertank",
+            "name": "David Rushton",
             "email": "david@papertank.co.uk"
         }
     ],

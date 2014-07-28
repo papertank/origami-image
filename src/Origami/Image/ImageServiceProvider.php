@@ -18,7 +18,7 @@ class ImageServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('origami/image');
+        $this->package('origami/image', 'origami/image');
 	}
 
 	/**
@@ -27,8 +27,11 @@ class ImageServiceProvider extends ServiceProvider {
 	 * @return void
 	 */
 	public function register()
-	{
-		//
+    {
+        $this->app['config']->package('origami/image', __DIR__.'/../../config', 'origami/image');
+
+		$this->app->register('Intervention\Image\ImageServiceProvider');
+        $this->app->alias('Image', 'Intervention\Image\Facades\Image');
 	}
 
 	/**
